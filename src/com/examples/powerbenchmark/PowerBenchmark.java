@@ -115,13 +115,10 @@ public class PowerBenchmark extends ActionBarActivity {
 				PackageManager manager = getPackageManager();
 				try {
 				    i = manager.getLaunchIntentForPackage("es.deusto.deustotech.androjena");
-				    
 				    if (i == null){
 					    System.out.println("apk not found");
 				        throw new PackageManager.NameNotFoundException();
 				    }
-				    i.putExtra("firstKeyName","FirstKeyValue");
-				    i.putExtra("secondKeyName","SecondKeyValue");
 				    i.addCategory(Intent.CATEGORY_LAUNCHER);
 				    //System.out.println("notsda");
 				    startActivity(i);
