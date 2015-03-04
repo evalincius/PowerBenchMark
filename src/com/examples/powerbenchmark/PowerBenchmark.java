@@ -23,12 +23,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class PowerBenchmark extends ActionBarActivity {
+public class PowerBenchmark extends ActionBarActivity implements OnItemSelectedListener {
 	private TextView textView;
 	private Button buttonHermit;
 	private Button buttonNull;
@@ -45,6 +49,11 @@ public class PowerBenchmark extends ActionBarActivity {
 
 
 	private static final String POWER_PROFILE_CLASS = "com.android.internal.os.PowerProfile";
+	private String[] NumberOfUniversities = { "1 University","5 Universities","10 Universities","20 Unieversities","50 Universities" };
+
+
+	Spinner spinnerState, spinnerCapital;
+	TextView tvState;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +64,23 @@ public class PowerBenchmark extends ActionBarActivity {
 		buttonNull = (Button) findViewById(R.id.buttonNull);
 		buttonPellet = (Button) findViewById(R.id.buttonPellet);
 		buttonAndroJena = (Button) findViewById(R.id.buttonAndroJena);
+			
+		System.out.println(NumberOfUniversities.length);
+	    tvState = (TextView) findViewById(R.id.mystate);
+
+	    spinnerState = (Spinner) findViewById(R.id.spinnerstate);
+
+	    ArrayAdapter<String> adapter_state = new ArrayAdapter<String>(this,
+	            android.R.layout.simple_spinner_item, NumberOfUniversities);
+	    adapter_state
+	            .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+	    spinnerState.setAdapter(adapter_state);
+	    spinnerState.setOnItemSelectedListener(this);
+	
+
+	
+
+	
 		
 		
 		buttonHermit.setOnClickListener(new OnClickListener() {
@@ -154,13 +180,7 @@ public class PowerBenchmark extends ActionBarActivity {
         batteryInfoReceiver = new BroadcastReceiver() {
 			@Override
 			public void onReceive(Context context, Intent intent) {			
-				int  health= intent.getIntExtra(BatteryManager.EXTRA_HEALTH,0);
-				int  level= intent.getIntExtra(BatteryManager.EXTRA_LEVEL,0);
 				int  plugged= intent.getIntExtra(BatteryManager.EXTRA_PLUGGED,0);
-				boolean  present= intent.getExtras().getBoolean(BatteryManager.EXTRA_PRESENT); 
-				int  scale= intent.getIntExtra(BatteryManager.EXTRA_SCALE,0);
-				float batteryPct = level / (float)scale;
-				int  status= intent.getIntExtra(BatteryManager.EXTRA_STATUS,0);
 				String  technology= intent.getExtras().getString(BatteryManager.EXTRA_TECHNOLOGY);
 				int  temperature= intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE,0);
 				int  voltage= intent.getIntExtra(BatteryManager.EXTRA_VOLTAGE,0);				
@@ -171,20 +191,12 @@ public class PowerBenchmark extends ActionBarActivity {
 						mBatteryManager.getLongProperty(BatteryManager.BATTERY_PROPERTY_CURRENT_NOW);					
 				float currentdraw = energy;
 				draw = currentdraw;		
-				batteryInfo.setText(
-						//"Health: "+health+"\n"+
-						//"Level: "+level+"\n"+
-						"Plugged: "+plugged+"\n"+
-						//"Present: "+present+"\n"+
-						//"Scale: "+scale+"\n"+
-						//"Status: "+status+"\n"+
+				batteryInfo.setText("Plugged: "+plugged+"\n"+
 						"Technology: "+technology+"\n"+
 						"Temperature: "+temperature+"\n"+
 						"Voltage: "+voltage+"\n"+
-						//"BateryCurrLvl: " + batteryPct+ "\n"+
 						"Current mA = " + energy + "mA"+ "\n"+
 						"Capacity Drained = " + drained + "mAh"+ "\n"
-						//"Average  = " + energy3 + "mAh"+ "\n"+
 						);
 
 			}
@@ -203,14 +215,9 @@ public class PowerBenchmark extends ActionBarActivity {
 	    timer = new Timer();	   
 	    timer.schedule(new TimerTask() {
 	        public void run() {	            
-	           // draw = draw + (bat());
 	        	float curret =bat(); 
 	        	drained =drained +(curret/7200);
-	            		//System.out.println("Current mA = " + curret + "mA"+ "\n"+
-						//"Capacity Drained = " + drained + "mAh"+ "\n");
-						
-	    		//batteryInfo=(TextView)findViewById(R.id.textView);
-
+	            		
 	       }
 	   }, 0, 500 );
 	}
@@ -264,5 +271,25 @@ public class PowerBenchmark extends ActionBarActivity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	public void onItemSelected(AdapterView<?> parent, View view, int position,
+	        long id) {
+
+	    spinnerState.setSelection(position);
+	    String myState = (String) spinnerState.getSelectedItem();
+	   // tvState.setText("Currently selected  " + myState);
+	    
+	}
+
+	public void onNothingSelected(AdapterView<?> parent) {}
+	
+	
 	
 }
