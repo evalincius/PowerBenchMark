@@ -24,4 +24,21 @@
             android:layout_height="wrap_content"
             android:text="Pellet" />
      
+     <!-- Text Label -->
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dip"
+        android:text="Category:"
+        android:layout_marginBottom="5dp"
+    />
+ 
+    <!-- Spinner Element -->
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:prompt="@string/spinner_title"
+    />
+     
 </LinearLayout>
