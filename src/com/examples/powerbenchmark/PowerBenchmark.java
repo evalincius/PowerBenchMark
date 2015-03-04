@@ -45,11 +45,12 @@ public class PowerBenchmark extends ActionBarActivity implements OnItemSelectedL
 	private Timer timer;
 	private float draw;
 	private float drained;
+	private String SelectedOntology;
 
 
 
 	private static final String POWER_PROFILE_CLASS = "com.android.internal.os.PowerProfile";
-	private String[] NumberOfUniversities = { "1 University","5 Universities","10 Universities","20 Unieversities","50 Universities" };
+	private String[] NumberOfUniversities = { "a.owl","c.owl","pizza.owl","University0.owl","50 Universities" };
 
 
 	Spinner spinnerState, spinnerCapital;
@@ -97,6 +98,7 @@ public class PowerBenchmark extends ActionBarActivity implements OnItemSelectedL
 					    System.out.println("apk not found");
 				        throw new PackageManager.NameNotFoundException();
 				    }
+				    i.putExtra("ontologyName", SelectedOntology);
 				    i.addCategory(Intent.CATEGORY_LAUNCHER);
 				    //System.out.println("notsda");
 				    startActivity(i);
@@ -121,6 +123,7 @@ public class PowerBenchmark extends ActionBarActivity implements OnItemSelectedL
 					    System.out.println("apk not found");
 				        throw new PackageManager.NameNotFoundException();
 				    }
+				    i.putExtra("ontologyName", SelectedOntology);
 				    i.addCategory(Intent.CATEGORY_LAUNCHER);
 				    //System.out.println("notsda");
 				    startActivity(i);
@@ -145,6 +148,7 @@ public class PowerBenchmark extends ActionBarActivity implements OnItemSelectedL
 					    System.out.println("apk not found");
 				        throw new PackageManager.NameNotFoundException();
 				    }
+				    i.putExtra("ontologyName", SelectedOntology);
 				    i.addCategory(Intent.CATEGORY_LAUNCHER);
 				    //System.out.println("notsda");
 				    startActivity(i);
@@ -283,8 +287,8 @@ public class PowerBenchmark extends ActionBarActivity implements OnItemSelectedL
 	        long id) {
 
 	    spinnerState.setSelection(position);
-	    String myState = (String) spinnerState.getSelectedItem();
-	   // tvState.setText("Currently selected  " + myState);
+	    SelectedOntology = spinnerState.getSelectedItem().toString();
+	    //tvState.setText("Currently selected  " + SelectedOntology);
 	    
 	}
 
