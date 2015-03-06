@@ -1,6 +1,17 @@
 package com.examples.powerbenchmark;
 
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Random;
 import java.util.Timer;
@@ -18,7 +29,11 @@ import android.os.AsyncTask;
 import android.os.BatteryManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.ActionBar.LayoutParams;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,6 +43,7 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,7 +66,7 @@ public class PowerBenchmark extends ActionBarActivity implements OnItemSelectedL
 
 
 	private static final String POWER_PROFILE_CLASS = "com.android.internal.os.PowerProfile";
-	private String[] NumberOfUniversities = { "a.owl","c.owl","pizza.owl","University0.owl","50 Universities" };
+	private String[] NumberOfUniversities = { "University00.owl","University05.owl","University010.owl","University015.owl" };
 
 
 	Spinner spinnerState, spinnerCapital;
@@ -65,7 +81,70 @@ public class PowerBenchmark extends ActionBarActivity implements OnItemSelectedL
 		buttonNull = (Button) findViewById(R.id.buttonNull);
 		buttonPellet = (Button) findViewById(R.id.buttonPellet);
 		buttonAndroJena = (Button) findViewById(R.id.buttonAndroJena);
-			
+		
+		
+		
+			//creates button for popup window
+		final Button btnOpenPopup = (Button)findViewById(R.id.openpopup);
+        btnOpenPopup.setOnClickListener(new Button.OnClickListener(){
+        	
+        	
+        	//creates popup window
+   @Override
+   public void onClick(View arg0) {
+    LayoutInflater layoutInflater 
+     = (LayoutInflater)getBaseContext()
+      .getSystemService(LAYOUT_INFLATER_SERVICE);  
+    View popupView = layoutInflater.inflate(R.layout.popup, null);  
+             final PopupWindow popupWindow = new PopupWindow(
+               popupView, 
+               LayoutParams.WRAP_CONTENT,  
+                     LayoutParams.WRAP_CONTENT);  
+             popupWindow.showAtLocation(textView, Gravity.CENTER, 0, 0);
+             TextView popuptext = (TextView)popupView.findViewById(R.id.popuptext);
+             try {
+            	//write("log", "The Log file is currently empty");
+				popuptext.setText(read("log"));
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+             Button btnDismiss = (Button)popupView.findViewById(R.id.dismiss);
+             Button btnClean = (Button)popupView.findViewById(R.id.clean);
+
+             btnDismiss.setOnClickListener(new Button.OnClickListener(){
+
+			     @Override
+			     public void onClick(View v) {
+			      // TODO Auto-generated method stub
+			      popupWindow.dismiss();
+			     }});
+             
+             
+             btnClean.setOnClickListener(new Button.OnClickListener(){
+
+			     @Override
+			     public void onClick(View v) {
+			      // TODO Auto-generated method stub
+			     	write("log", "This is a Log File");
+			        popupWindow.dismiss();
+			     }});
+               
+          
+             
+			               
+			             popupWindow.showAsDropDown(btnOpenPopup, 50, -30);
+			         
+			   }});
+        
+        
+
+		
+		
+		
+		
+		
+		//Creates DropDown menu 
 		System.out.println(NumberOfUniversities.length);
 	    tvState = (TextView) findViewById(R.id.mystate);
 
@@ -82,7 +161,8 @@ public class PowerBenchmark extends ActionBarActivity implements OnItemSelectedL
 	
 
 	
-		
+		//Button that creates the intent to other preinstalled application
+	    //in this case Hermit reasoner.
 		
 		buttonHermit.setOnClickListener(new OnClickListener() {
 
@@ -108,7 +188,8 @@ public class PowerBenchmark extends ActionBarActivity implements OnItemSelectedL
 
 			}
 		});
-		
+		//Button that creates the intent to other preinstalled application
+	    //in this case Pellet reasoner.
 		buttonPellet.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -133,7 +214,8 @@ public class PowerBenchmark extends ActionBarActivity implements OnItemSelectedL
 
 			}
 		});
-		
+		//Button that creates the intent to other preinstalled application
+	    //in this case AndroJena reasoner.
 		buttonAndroJena.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -158,7 +240,7 @@ public class PowerBenchmark extends ActionBarActivity implements OnItemSelectedL
 
 			}
 		});
-		
+		//Button that sets the drain variable to 0.
 		buttonNull.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -178,7 +260,7 @@ public class PowerBenchmark extends ActionBarActivity implements OnItemSelectedL
 	    super.onResume();
 	    start();
 	}
-	
+	//Battery method that reads the battery information and does some records and calculations 
 	public  float bat(){		
         registerReceiver(this.batteryInfoReceiver,	new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
         batteryInfoReceiver = new BroadcastReceiver() {
@@ -211,7 +293,8 @@ public class PowerBenchmark extends ActionBarActivity implements OnItemSelectedL
 	
 	
 
-
+	//Starts timer that registers current flow in mA of battery 
+	//and transforms it to mAh
 	public void start() {
 	    if(timer != null) {
 	        return;
@@ -231,32 +314,7 @@ public class PowerBenchmark extends ActionBarActivity implements OnItemSelectedL
 	    timer = null;
 	}
 	 
-	public void getBatteryCapacity() {
-	    Object mPowerProfile_ = null;
-
-	    final String POWER_PROFILE_CLASS = "com.android.internal.os.PowerProfile";
-
-	    try {
-	        mPowerProfile_ = Class.forName(POWER_PROFILE_CLASS)
-	                .getConstructor(Context.class).newInstance(this);
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    } 
-
-	    try {
-	        double batteryCapacity = (Double) Class
-	                .forName(POWER_PROFILE_CLASS)
-	                .getMethod("getAveragePower", java.lang.String.class)
-	                .invoke(mPowerProfile_, "battery.capacity");
-	        Toast.makeText(PowerBenchmark.this, batteryCapacity + " mah",
-	                Toast.LENGTH_LONG).show();
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    } 
-	}
-	 
 	
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -294,6 +352,54 @@ public class PowerBenchmark extends ActionBarActivity implements OnItemSelectedL
 
 	public void onNothingSelected(AdapterView<?> parent) {}
 	
+
+	//File writter
+	public void write(String fname, String fcontent){
+	        String filename= "storage/emulated/0/Download/"+fname+".txt";
+	        String temp="";
+	        if(!fcontent.equals("This is a Log File")){
+	        	temp = read(fname);
+	        }
+	        BufferedWriter writer = null;
+	        try {
+	            //create a temporary file
+	            File logFile = new File(filename);
+
+	            // This will output the full path where the file will be written to...
+	            System.out.println(logFile.getCanonicalPath());
+
+	            writer = new BufferedWriter(new FileWriter(logFile));
+	            
+	            writer.write(temp + fcontent );
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        } finally {
+	            try {
+	                // Close the writer regardless of what happens...
+	                writer.close();
+	            } catch (Exception e) {
+	            }
+	        }
+	   }
 	
+	//File reader
+	   public String read(String fname){
+	     BufferedReader br = null;
+	     String response = null;
+	      try {
+	        StringBuffer output = new StringBuffer();
+	        String fpath = "storage/emulated/0/Download/"+fname+".txt";
+	        br = new BufferedReader(new FileReader(fpath));
+	        String line = "";
+	        while ((line = br.readLine()) != null) {
+	          output.append(line +"\n");
+	        }
+	        response = output.toString();
+	      } catch (IOException e) {
+	        e.printStackTrace();
+	        return null;
+	      }
+	      return response;
+	   }
 	
 }
