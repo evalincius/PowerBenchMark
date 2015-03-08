@@ -13,14 +13,20 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Random;
+import java.util.Stack;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -62,9 +68,10 @@ public class PowerBenchmark extends ActionBarActivity implements OnItemSelectedL
 	private float draw;
 	private float drained;
 	private String SelectedOntology;
+	private int reasonerState;
 
 
-
+	static final int PICK_CONTACT_REQUEST = 1;  // The request code
 	private static final String POWER_PROFILE_CLASS = "com.android.internal.os.PowerProfile";
 	private String[] NumberOfUniversities = { "University00.owl","University05.owl","University010.owl","University015.owl" };
 
@@ -81,9 +88,10 @@ public class PowerBenchmark extends ActionBarActivity implements OnItemSelectedL
 		buttonNull = (Button) findViewById(R.id.buttonNull);
 		buttonPellet = (Button) findViewById(R.id.buttonPellet);
 		buttonAndroJena = (Button) findViewById(R.id.buttonAndroJena);
+		reasonerState = 1;
 		
 		
-		
+
 			//creates button for popup window
 		final Button btnOpenPopup = (Button)findViewById(R.id.openpopup);
         btnOpenPopup.setOnClickListener(new Button.OnClickListener(){
@@ -168,23 +176,10 @@ public class PowerBenchmark extends ActionBarActivity implements OnItemSelectedL
 
 			@Override
 			public void onClick(View v) {
-				start();
-
-				Intent i;
-				PackageManager manager = getPackageManager();
-				try {
-				    i = manager.getLaunchIntentForPackage("com.example.hermitowlapi");
-				    if (i == null){
-					    System.out.println("apk not found");
-				        throw new PackageManager.NameNotFoundException();
-				    }
-				    i.putExtra("ontologyName", SelectedOntology);
-				    i.addCategory(Intent.CATEGORY_LAUNCHER);
-				    //System.out.println("notsda");
-				    startActivity(i);
-				} catch (PackageManager.NameNotFoundException e) {
-
-				}
+				Intent intent = new Intent();
+				intent.setComponent(new ComponentName("com.example.hermitowlapi", "com.example.hermitowlapi.MainActivity"));
+		        intent.putExtra("ontologyName", SelectedOntology);
+		        startActivityForResult(intent,90);
 
 			}
 		});
@@ -194,24 +189,11 @@ public class PowerBenchmark extends ActionBarActivity implements OnItemSelectedL
 
 			@Override
 			public void onClick(View v) {
-				start();
-
-				Intent i;
-				PackageManager manager = getPackageManager();
-				try {
-				    i = manager.getLaunchIntentForPackage("es.deusto.deustotech.adaptui");
-				    if (i == null){
-					    System.out.println("apk not found");
-				        throw new PackageManager.NameNotFoundException();
-				    }
-				    i.putExtra("ontologyName", SelectedOntology);
-				    i.addCategory(Intent.CATEGORY_LAUNCHER);
-				    //System.out.println("notsda");
-				    startActivity(i);
-				} catch (PackageManager.NameNotFoundException e) {
-
-				}
-
+				
+				Intent intent = new Intent();
+				intent.setComponent(new ComponentName("es.deusto.deustotech.adaptui", "es.deusto.deustotech.adaptui.ActivityExample"));
+		        intent.putExtra("ontologyName", SelectedOntology);
+		        startActivityForResult(intent,90);
 			}
 		});
 		//Button that creates the intent to other preinstalled application
@@ -220,45 +202,31 @@ public class PowerBenchmark extends ActionBarActivity implements OnItemSelectedL
 
 			@Override
 			public void onClick(View v) {
-				start();
-
-				Intent i;
-				PackageManager manager = getPackageManager();
-				try {
-				    i = manager.getLaunchIntentForPackage("es.deusto.deustotech.androjena");
-				    if (i == null){
-					    System.out.println("apk not found");
-				        throw new PackageManager.NameNotFoundException();
-				    }
-				    i.putExtra("ontologyName", SelectedOntology);
-				    i.addCategory(Intent.CATEGORY_LAUNCHER);
-				    //System.out.println("notsda");
-				    startActivity(i);
-				} catch (PackageManager.NameNotFoundException e) {
-
-				}
-
+				Intent intent = new Intent();
+				intent.setComponent(new ComponentName("es.deusto.deustotech.androjena", "es.deusto.deustotech.androjena.MainActivity"));
+		        intent.putExtra("ontologyName", SelectedOntology);
+		        startActivityForResult(intent,90);
 			}
 		});
 		//Button that sets the drain variable to 0.
 		buttonNull.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				//stop();
-				drained = 0;
+				Simulate(createPermutation());
 			}
 		});	
 	}
 	
 	public void onPause() {
-	    super.onPause();}
+	    super.onPause();
+	}
 	
 	public void onStop() {
 	    super.onStop();}
 	
 	public void onResume(){
 	    super.onResume();
-	    start();
+	    //start();
 	}
 	//Battery method that reads the battery information and does some records and calculations 
 	public  float bat(){		
@@ -303,10 +271,10 @@ public class PowerBenchmark extends ActionBarActivity implements OnItemSelectedL
 	    timer.schedule(new TimerTask() {
 	        public void run() {	            
 	        	float curret =bat(); 
-	        	drained =drained +(curret/7200);
+	        	drained =drained +(curret/64000);
 	            		
 	       }
-	   }, 0, 500 );
+	   }, 0, 50 );
 	}
 
 	public void stop() {
@@ -402,4 +370,67 @@ public class PowerBenchmark extends ActionBarActivity implements OnItemSelectedL
 	      return response;
 	   }
 	
+	   //simulates the permutations of all reasoners.
+	   public Stack<String> createPermutation(){
+		   Stack<String> stack = new Stack<String>();
+		   
+			
+		   stack.push("androjena");
+		   stack.push("pellet");
+		   stack.push("hermit");
+		   
+		   stack.push("androjena");
+		   stack.push("hermit");
+		   stack.push("pellet");
+		   return stack;
+	   }
+	   
+	   public void Simulate(Stack<String> s){
+		    final Stack<String> stack = s;
+		   
+		   
+		   if(!stack.isEmpty()){
+			   if(reasonerState==1){
+				   String a = stack.pop();
+				   if(a.equals("androjena")){
+					   System.out.println("before "+reasonerState);
+					   reasonerState=0;
+					   buttonAndroJena.performClick();
+				   }
+				   if(a.equals("pellet")){
+					   buttonPellet.performClick();
+					   reasonerState=0;
+	
+				   }
+				   if(a.equals("hermit")){
+					   buttonHermit.performClick();
+					   reasonerState=0;
+				   }				  				   
+			   }
+			   new Handler().postDelayed(new Runnable() {
+
+			        @Override
+			        public void run() {
+			        	Simulate(stack);
+			        }
+			    }, 1000);
+			   
+		   }
+	   }
+	   
+	   //returns results from external activity(any reasoner called) to 
+	   //get the information if the reasoner is finished its task or not.
+	   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	         switch(requestCode) {
+	                case 90:
+	                 if (resultCode == RESULT_OK) {
+	                     Bundle res = data.getExtras();
+	                     int result = res.getInt("results");
+	                     reasonerState = result;
+	                     System.out.println(result);
+	                     
+	                     }
+	                break;
+	         }
+	    }
 }

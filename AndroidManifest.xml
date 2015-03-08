@@ -24,6 +24,36 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
+		<activity
+            android:name="es.deusto.deustotech.androjena.MainActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="es.deusto.deustotech.androjena.MainActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        
+		<activity
+            android:name="com.example.hermitowlapi.MainActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="com.example.hermitowlapi.MainActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        
+		<activity
+            android:name="es.deusto.deustotech.adaptui.ActivityExample"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="es.deusto.deustotech.adaptui.ActivityExample" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        
+		
+        
         <receiver android:name=".BatteryLevelReceiver">
 		<intent-filter>
  			 <action android:name="android.intent.action.ACTION_BATTERY_LOW"/>

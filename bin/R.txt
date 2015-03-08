@@ -351,10 +351,10 @@ int id action_settings 0x7f09004a
 int id activity_chooser_view_content 0x7f090021
 int id always 0x7f090014
 int id beginning 0x7f09001b
-int id buttonAndroJena 0x7f090042
+int id buttonAndroJena 0x7f090041
 int id buttonHermit 0x7f090040
-int id buttonNull 0x7f090041
-int id buttonPellet 0x7f090043
+int id buttonNull 0x7f090043
+int id buttonPellet 0x7f090042
 int id checkbox 0x7f090029
 int id clean 0x7f090049
 int id collapseActionView 0x7f090015

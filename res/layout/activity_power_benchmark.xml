@@ -13,10 +13,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Hermit" />
-     <Button android:id="@+id/buttonNull"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Null" />
+     
      <Button android:id="@+id/buttonAndroJena"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -25,6 +22,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Pellet" />
+     
+     <Button android:id="@+id/buttonNull"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Simulate" />
 
     <TextView
         android:id="@+id/mystate"
