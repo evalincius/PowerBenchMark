@@ -27,6 +27,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Simulate" />
+     
+     <Button android:id="@+id/buttonStartControl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Start Control Test" />
+     <Button android:id="@+id/buttonStopControl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Stop Control Test" />
 
     <TextView
         android:id="@+id/mystate"
@@ -36,10 +45,9 @@
         android:layout_below="@+id/spinnerstate"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="20dp"
-        android:text="Currently selected LUBM ontology containing"
+        android:text="Selected LUBM ontology: "
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@android:color/black" />
-
     <Spinner
         android:id="@+id/spinnerstate"
         android:layout_width="match_parent"
@@ -47,10 +55,27 @@
         android:layout_marginTop="10dp" />
     
     
-    <Button
+    <TextView
+        android:id="@+id/other"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/spinnerstate"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"
+        android:text="Selected Query: "
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@android:color/black" />
+    <Spinner
+        android:id="@+id/spinnerstate2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp" />
+   <Button
         android:id="@+id/openpopup"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="Open Popup Window" />
-     
+   
+   
 </LinearLayout>

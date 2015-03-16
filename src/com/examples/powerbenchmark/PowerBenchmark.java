@@ -4,40 +4,21 @@ package com.examples.powerbenchmark;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Random;
 import java.util.Stack;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
-import android.app.Activity;
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.pm.PackageManager;
-import android.os.AsyncTask;
 import android.os.BatteryManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar.LayoutParams;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -52,32 +33,37 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
-public class PowerBenchmark extends ActionBarActivity implements OnItemSelectedListener {
+public class PowerBenchmark extends ActionBarActivity {
 	private TextView textView;
 	private Button buttonHermit;
 	private Button buttonNull;
 	private Button buttonPellet;
 	private Button buttonAndroJena;
+	private Button buttonStartControl;
+	private Button buttonStopControl;
+	private long startCountingTime;
+	private long stopCountingTime;
 
-	private TextView batteryInfo;
-	private ImageView imageBatteryState;
-	private BroadcastReceiver batteryInfoReceiver;
+	
 	private Timer timer;
 	private float draw;
 	private float drained;
-	private String SelectedOntology;
+	private String SelectedOntology, SelectedQuery;
 	private int reasonerState;
 
 
 	static final int PICK_CONTACT_REQUEST = 1;  // The request code
 	private static final String POWER_PROFILE_CLASS = "com.android.internal.os.PowerProfile";
 	private String[] NumberOfUniversities = { "University00.owl","University05.owl","University010.owl","University015.owl" };
+	private String[] NumberOfQueries = { "Query1","Query2","Query3","Query4" };
 
 
-	Spinner spinnerState, spinnerCapital;
+
+	Spinner spinnerState, spinnerState2;
 	TextView tvState;
+	TextView tvState2;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -88,10 +74,13 @@ public class PowerBenchmark extends ActionBarActivity implements OnItemSelectedL
 		buttonNull = (Button) findViewById(R.id.buttonNull);
 		buttonPellet = (Button) findViewById(R.id.buttonPellet);
 		buttonAndroJena = (Button) findViewById(R.id.buttonAndroJena);
+		buttonStartControl = (Button) findViewById(R.id.buttonStartControl);
+		buttonStopControl = (Button) findViewById(R.id.buttonStopControl);
+
+
 		reasonerState = 1;
 		
 		
-
 			//creates button for popup window
 		final Button btnOpenPopup = (Button)findViewById(R.id.openpopup);
         btnOpenPopup.setOnClickListener(new Button.OnClickListener(){
@@ -135,6 +124,15 @@ public class PowerBenchmark extends ActionBarActivity implements OnItemSelectedL
 			     public void onClick(View v) {
 			      // TODO Auto-generated method stub
 			     	write("log", "This is a Log File");
+			     	write("justdata", "This is a Log File");
+					write("ontLoader", "This is a Log File");
+		    		write("Results", "This is a Log File");
+		    		write("ReasonerTime", "This is a Log File");
+		    		write("LoaderTime", "This is a Log File");
+
+
+
+
 			        popupWindow.dismiss();
 			     }});
                
@@ -143,18 +141,9 @@ public class PowerBenchmark extends ActionBarActivity implements OnItemSelectedL
 			               
 			             popupWindow.showAsDropDown(btnOpenPopup, 50, -30);
 			         
-			   }});
-        
-        
-
-		
-		
-		
-		
+			   }});	
 		
 		//Creates DropDown menu 
-		System.out.println(NumberOfUniversities.length);
-	    tvState = (TextView) findViewById(R.id.mystate);
 
 	    spinnerState = (Spinner) findViewById(R.id.spinnerstate);
 
@@ -163,8 +152,51 @@ public class PowerBenchmark extends ActionBarActivity implements OnItemSelectedL
 	    adapter_state
 	            .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 	    spinnerState.setAdapter(adapter_state);
-	    spinnerState.setOnItemSelectedListener(this);
-	
+	    
+		//Creates second DropDown menu 
+
+
+	    spinnerState2 = (Spinner) findViewById(R.id.spinnerstate2);
+
+	    ArrayAdapter<String> adapter_state2 = new ArrayAdapter<String>(this,
+	            android.R.layout.simple_spinner_item, NumberOfQueries);
+	    adapter_state2
+	            .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+	    spinnerState2.setAdapter(adapter_state2);
+	    spinnerState2.setOnItemSelectedListener(new OnItemSelectedListener() 
+	    {
+	        @Override
+	        public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) 
+	        {
+	        	 
+	     	    
+	     	    spinnerState2.setSelection(position);
+	     	    SelectedQuery = spinnerState2.getSelectedItem().toString();	   
+	        }
+
+	        @Override
+	        public void onNothingSelected(AdapterView<?> parentView) 
+	        {
+	        }
+	    });
+
+
+
+	    spinnerState.setOnItemSelectedListener(new OnItemSelectedListener() 
+	    {
+	        @Override
+	        public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) 
+	        {
+	        	spinnerState.setSelection(position);
+	     	    SelectedOntology = spinnerState.getSelectedItem().toString();
+	        }
+
+	        @Override
+	        public void onNothingSelected(AdapterView<?> parentView) 
+	        {
+	        }
+	    });
+
 
 	
 
@@ -179,6 +211,7 @@ public class PowerBenchmark extends ActionBarActivity implements OnItemSelectedL
 				Intent intent = new Intent();
 				intent.setComponent(new ComponentName("com.example.hermitowlapi", "com.example.hermitowlapi.MainActivity"));
 		        intent.putExtra("ontologyName", SelectedOntology);
+		        intent.putExtra("queryName", SelectedQuery);
 		        startActivityForResult(intent,90);
 
 			}
@@ -193,6 +226,7 @@ public class PowerBenchmark extends ActionBarActivity implements OnItemSelectedL
 				Intent intent = new Intent();
 				intent.setComponent(new ComponentName("es.deusto.deustotech.adaptui", "es.deusto.deustotech.adaptui.ActivityExample"));
 		        intent.putExtra("ontologyName", SelectedOntology);
+		        intent.putExtra("queryName", SelectedQuery);
 		        startActivityForResult(intent,90);
 			}
 		});
@@ -205,6 +239,7 @@ public class PowerBenchmark extends ActionBarActivity implements OnItemSelectedL
 				Intent intent = new Intent();
 				intent.setComponent(new ComponentName("es.deusto.deustotech.androjena", "es.deusto.deustotech.androjena.MainActivity"));
 		        intent.putExtra("ontologyName", SelectedOntology);
+		        intent.putExtra("queryName", SelectedQuery);
 		        startActivityForResult(intent,90);
 			}
 		});
@@ -215,7 +250,22 @@ public class PowerBenchmark extends ActionBarActivity implements OnItemSelectedL
 				Simulate(createPermutation());
 			}
 		});	
+		buttonStartControl.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					startCountingTime = System.currentTimeMillis();
+					start();
+				}
+		});	
+		buttonStopControl.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				stop();
+			}
+	});	
 	}
+	
+
 	
 	public void onPause() {
 	    super.onPause();
@@ -228,41 +278,31 @@ public class PowerBenchmark extends ActionBarActivity implements OnItemSelectedL
 	    super.onResume();
 	    //start();
 	}
-	//Battery method that reads the battery information and does some records and calculations 
+	
+	/**
+	 * Battery method that reads the battery 
+	 * information and does some records and calculations 	  
+	 *            
+	 * @return float draw that is curent in mA flowing from the 
+	 * battery at the moment.
+	 
+	 */
 	public  float bat(){		
-        registerReceiver(this.batteryInfoReceiver,	new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
-        batteryInfoReceiver = new BroadcastReceiver() {
-			@Override
-			public void onReceive(Context context, Intent intent) {			
-				int  plugged= intent.getIntExtra(BatteryManager.EXTRA_PLUGGED,0);
-				String  technology= intent.getExtras().getString(BatteryManager.EXTRA_TECHNOLOGY);
-				int  temperature= intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE,0);
-				int  voltage= intent.getIntExtra(BatteryManager.EXTRA_VOLTAGE,0);				
-				
 				BatteryManager mBatteryManager =
 						(BatteryManager)getSystemService(Context.BATTERY_SERVICE);
 						Long energy =
 						mBatteryManager.getLongProperty(BatteryManager.BATTERY_PROPERTY_CURRENT_NOW);					
 				float currentdraw = energy;
-				draw = currentdraw;		
-				batteryInfo.setText("Plugged: "+plugged+"\n"+
-						"Technology: "+technology+"\n"+
-						"Temperature: "+temperature+"\n"+
-						"Voltage: "+voltage+"\n"+
-						"Current mA = " + energy + "mA"+ "\n"+
-						"Capacity Drained = " + drained + "mAh"+ "\n"
-						);
+				draw = currentdraw;
 
-			}
-		};
-		batteryInfo=(TextView)findViewById(R.id.textView);
 		return draw;
 	}
 	
 	
-
-	//Starts timer that registers current flow in mA of battery 
-	//and transforms it to mAh
+	/**
+	 * Starts timer that registers current flow in mA of battery
+	 * and transforms it to mAh.
+	 */	
 	public void start() {
 	    if(timer != null) {
 	        return;
@@ -271,15 +311,30 @@ public class PowerBenchmark extends ActionBarActivity implements OnItemSelectedL
 	    timer.schedule(new TimerTask() {
 	        public void run() {	            
 	        	float curret =bat(); 
-	        	drained =drained +(curret/64000);
-	            		
+	        	drained =drained +(curret/3300);
+	        	runOnUiThread(new Runnable() {
+
+	        		
+	        	    @Override
+	        	    public void run() {
+	    				stopCountingTime = System.currentTimeMillis()-startCountingTime;	
+	    				float timeElapsed2 = stopCountingTime;
+	    				float timeElapsed = timeElapsed2/1000;
+		        		((TextView)findViewById(R.id.textView)).setText("Capacity Drained = " + drained + "mAh \n"+ 
+		        			"Time elapsed : " +timeElapsed + "s"	);
+	        	            }
+	        	    });	        	
 	       }
-	   }, 0, 50 );
+	   }, 0, 1000 );
 	}
 
 	public void stop() {
-	    timer.cancel();
-	    timer = null;
+		if(timer!=null){
+			drained=0;
+			timer.cancel();
+			timer = null;
+			drained=0;
+		}
 	}
 	 
 	
@@ -289,7 +344,6 @@ public class PowerBenchmark extends ActionBarActivity implements OnItemSelectedL
 		getMenuInflater().inflate(R.menu.power_benchmark, menu);
 		return true;
 	}
-
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle action bar item clicks here. The action bar will
@@ -304,27 +358,12 @@ public class PowerBenchmark extends ActionBarActivity implements OnItemSelectedL
 	
 	
 	
-	
-	
-	
-	
-	
-	public void onItemSelected(AdapterView<?> parent, View view, int position,
-	        long id) {
-
-	    spinnerState.setSelection(position);
-	    SelectedOntology = spinnerState.getSelectedItem().toString();
-	    //tvState.setText("Currently selected  " + SelectedOntology);
-	    
-	}
-
-	public void onNothingSelected(AdapterView<?> parent) {}
-	
 
 	//File writter
 	public void write(String fname, String fcontent){
 	        String filename= "storage/emulated/0/Download/"+fname+".txt";
 	        String temp="";
+	        //check if file need to bempty or not by looking at the first line 
 	        if(!fcontent.equals("This is a Log File")){
 	        	temp = read(fname);
 	        }
@@ -382,6 +421,22 @@ public class PowerBenchmark extends ActionBarActivity implements OnItemSelectedL
 		   stack.push("androjena");
 		   stack.push("hermit");
 		   stack.push("pellet");
+		   
+		   stack.push("pellet");
+		   stack.push("androjena");
+		   stack.push("hermit");
+		   
+		   stack.push("pellet");
+		   stack.push("hermit");
+		   stack.push("androjena");
+
+		   stack.push("hermit");
+		   stack.push("androjena");
+		   stack.push("pellet");
+		   
+		   stack.push("hermit");
+		   stack.push("pellet");
+		   stack.push("androjena");
 		   return stack;
 	   }
 	   
@@ -416,6 +471,7 @@ public class PowerBenchmark extends ActionBarActivity implements OnItemSelectedL
 			    }, 1000);
 			   
 		   }
+			
 	   }
 	   
 	   //returns results from external activity(any reasoner called) to 
