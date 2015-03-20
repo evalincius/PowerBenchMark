@@ -11,9 +11,11 @@ import java.util.Stack;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.BatteryManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,6 +26,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -45,12 +48,17 @@ public class PowerBenchmark extends ActionBarActivity {
 	private long startCountingTime;
 	private long stopCountingTime;
 
+
 	
 	private Timer timer;
 	private float draw;
 	private float drained;
 	private String SelectedOntology, SelectedQuery;
 	private int reasonerState;
+	
+	private BroadcastReceiver batteryInfoReceiver;
+	private int mvoltage;
+	private float watts;
 
 
 	static final int PICK_CONTACT_REQUEST = 1;  // The request code
@@ -129,10 +137,8 @@ public class PowerBenchmark extends ActionBarActivity {
 		    		write("Results", "This is a Log File");
 		    		write("ReasonerTime", "This is a Log File");
 		    		write("LoaderTime", "This is a Log File");
-
-
-
-
+		    		write("PowerReasoner", "This is a Log File");
+		    		write("PowerLoader", "This is a Log File");
 			        popupWindow.dismiss();
 			     }});
                
@@ -254,6 +260,7 @@ public class PowerBenchmark extends ActionBarActivity {
 				@Override
 				public void onClick(View v) {
 					startCountingTime = System.currentTimeMillis();
+					getVoltage();
 					start();
 				}
 		});	
@@ -310,18 +317,23 @@ public class PowerBenchmark extends ActionBarActivity {
 	    timer = new Timer();	   
 	    timer.schedule(new TimerTask() {
 	        public void run() {	            
-	        	float curret =bat(); 
-	        	drained =drained +(curret/3300);
+	        	final float curret =bat();
+	        	drained =drained +(curret/3300);//3300s instead 3600s because after calculations there 
+	        	//were some error rate determined and diviation from 3300 covers the loss of data that
+	        	//was missed to be recorded. Calculated by measuring amount of current drained per 1% and finding 
+	        	//the constant that derives 31mah
+	        	watts = (float) ((drained*mvoltage/1000)*3.6);
+
 	        	runOnUiThread(new Runnable() {
 
 	        		
 	        	    @Override
 	        	    public void run() {
 	    				stopCountingTime = System.currentTimeMillis()-startCountingTime;	
-	    				float timeElapsed2 = stopCountingTime;
-	    				float timeElapsed = timeElapsed2/1000;
+	    				float timeElapsed = (float) (stopCountingTime/1000.0);
 		        		((TextView)findViewById(R.id.textView)).setText("Capacity Drained = " + drained + "mAh \n"+ 
-		        			"Time elapsed : " +timeElapsed + "s"	);
+		        			"Time elapsed : " +timeElapsed + "s\n"+"Voltage: "+curret+"mA"
+		        					);
 	        	            }
 	        	    });	        	
 	       }
@@ -330,6 +342,7 @@ public class PowerBenchmark extends ActionBarActivity {
 
 	public void stop() {
 		if(timer!=null){
+			unregisterReceiver(batteryInfoReceiver);
 			drained=0;
 			timer.cancel();
 			timer = null;
@@ -489,4 +502,15 @@ public class PowerBenchmark extends ActionBarActivity {
 	                break;
 	         }
 	    }
+	   
+   public void getVoltage(){
+       batteryInfoReceiver = new BroadcastReceiver() {
+			@Override
+			public void onReceive(Context context, Intent intent) {			
+				mvoltage= intent.getIntExtra(BatteryManager.EXTRA_VOLTAGE,0);				
+			}
+		};
+		registerReceiver(this.batteryInfoReceiver,	new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+	}
+
 }
