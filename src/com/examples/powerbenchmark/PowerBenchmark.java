@@ -63,8 +63,12 @@ public class PowerBenchmark extends ActionBarActivity {
 
 	static final int PICK_CONTACT_REQUEST = 1;  // The request code
 	private static final String POWER_PROFILE_CLASS = "com.android.internal.os.PowerProfile";
-	private String[] NumberOfUniversities = { "University00.owl","University05.owl","University010.owl","University015.owl" };
-	private String[] NumberOfQueries = { "Query1","Query2","Query3","Query4" };
+	
+	private String[] DatasetSize = { "1 Department","5 Departments","10 Departments","15 Departments" };
+	private String[] ReasoningTask = { "Instance Retrieval","Inference & Instance Retrieval","Inference","Classifying" };
+	
+	private String[] DatasetSizeToSend = { "University00.owl","University05.owl","University010.owl","University015.owl" };
+	private String[] ReasoningTaskToSend = { "Query1","Query2","Query3","Query4" };
 
 
 
@@ -154,9 +158,9 @@ public class PowerBenchmark extends ActionBarActivity {
 	    spinnerState = (Spinner) findViewById(R.id.spinnerstate);
 
 	    ArrayAdapter<String> adapter_state = new ArrayAdapter<String>(this,
-	            android.R.layout.simple_spinner_item, NumberOfUniversities);
+	            android.R.layout.simple_spinner_item, DatasetSize);
 	    adapter_state
-	            .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+	            .setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
 	    spinnerState.setAdapter(adapter_state);
 	    
 		//Creates second DropDown menu 
@@ -165,9 +169,9 @@ public class PowerBenchmark extends ActionBarActivity {
 	    spinnerState2 = (Spinner) findViewById(R.id.spinnerstate2);
 
 	    ArrayAdapter<String> adapter_state2 = new ArrayAdapter<String>(this,
-	            android.R.layout.simple_spinner_item, NumberOfQueries);
+	            android.R.layout.simple_spinner_item, ReasoningTask);
 	    adapter_state2
-	            .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+	            .setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
 	    spinnerState2.setAdapter(adapter_state2);
 	    spinnerState2.setOnItemSelectedListener(new OnItemSelectedListener() 
 	    {
@@ -177,7 +181,9 @@ public class PowerBenchmark extends ActionBarActivity {
 	        	 
 	     	    
 	     	    spinnerState2.setSelection(position);
-	     	    SelectedQuery = spinnerState2.getSelectedItem().toString();	   
+		     	int pos = spinnerState2.getSelectedItemPosition();
+	     	    SelectedQuery = ReasoningTaskToSend[pos];
+	     	   
 	        }
 
 	        @Override
@@ -194,7 +200,8 @@ public class PowerBenchmark extends ActionBarActivity {
 	        public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) 
 	        {
 	        	spinnerState.setSelection(position);
-	     	    SelectedOntology = spinnerState.getSelectedItem().toString();
+	        	int pos = spinnerState.getSelectedItemPosition();
+	        	SelectedOntology = DatasetSizeToSend[pos];
 	        }
 
 	        @Override

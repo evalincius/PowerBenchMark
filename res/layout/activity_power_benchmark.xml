@@ -1,58 +1,151 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-                  android:background="#d3d3d3"
-              
-              android:orientation="vertical" >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg"
+    android:orientation="vertical" >
+
     <TextView android:id="@+id/textView"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:text="Hello, I am a TextView" />
-    <Button android:id="@+id/buttonHermit"
-            android:layout_width="wrap_content"
+              android:text="" 
+              android:textColor="@android:color/white" 
+     />
+    
+    <View
+             android:layout_width="fill_parent"
+             android:layout_height="1dp"
+             android:layout_marginTop="10dp"
+             android:background="#FFFFFF"/>
+
+    <TextView
+        android:id="@+id/othertext"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Control Test"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:textSize="20dp" />
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" 
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">	
+		     <Button android:id="@+id/buttonStartControl"
+		            android:layout_width="fill_parent"
+		            android:layout_height="wrap_content"
+		            android:layout_weight="1"
+		            android:layout_marginTop="10dp"
+		            android:text="Start Control Test" />
+		     <Button android:id="@+id/buttonStopControl"
+		            android:layout_width="fill_parent"
+		            android:layout_height="wrap_content"
+		            android:layout_weight="1"
+		            android:layout_marginTop="10dp"
+		            android:text="Stop Control Test" />
+ 	 </LinearLayout>
+    
+	<View
+             android:layout_width="fill_parent"
+             android:layout_height="1dp"
+             android:layout_marginTop="10dp"
+             android:background="#FFFFFF"/>
+	
+	<TextView
+        android:id="@+id/othertext2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Select Reasoner or Simulation"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:textSize="20dp" />
+	
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" 
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        >                
+         <Button android:id="@+id/buttonHermit"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginTop="10dp"
             android:text="Hermit" />
      
-     <Button android:id="@+id/buttonAndroJena"
-            android:layout_width="wrap_content"
+    	 <Button android:id="@+id/buttonAndroJena"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="AndroJena" />
-     <Button android:id="@+id/buttonPellet"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Pellet" />
+            android:layout_weight="1"
+            android:layout_marginTop="10dp"
+            android:text="AndroJena" />               
+    </LinearLayout>
+    
+    
+    
+    
+	<LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" 
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        >
+		     <Button android:id="@+id/buttonPellet"
+		            android:layout_width="fill_parent"
+		            android:layout_height="wrap_content"
+		            android:layout_weight="1"
+		            android:layout_marginTop="10dp"
+		            android:text="Pellet" />
+		     
+		     <Button android:id="@+id/buttonNull"
+		            android:layout_width="fill_parent"
+		            android:layout_height="wrap_content"
+		            android:background="#FAAC58"
+		            android:layout_weight="1"	
+		            android:layout_marginTop="10dp"	            
+		            android:text="Simulate" />
+ 	 </LinearLayout>
      
-     <Button android:id="@+id/buttonNull"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Simulate" />
+   
+	<View
+             android:layout_width="fill_parent"
+             android:layout_height="1dp"
+             android:layout_marginTop="10dp"
+             android:background="#FFFFFF"/>
+	
+	
      
-     <Button android:id="@+id/buttonStartControl"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Start Control Test" />
-     <Button android:id="@+id/buttonStopControl"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Stop Control Test" />
-
     <TextView
         android:id="@+id/mystate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/spinnerstate"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="15dp"
         android:layout_marginTop="20dp"
-        android:text="Selected LUBM ontology: "
+        android:text="Select Size of LUBM Dataset "
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@android:color/black" />
-    <Spinner
-        android:id="@+id/spinnerstate"
+        android:textColor="@android:color/white" />
+  
+    
+    
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp" />
+        android:background="#c0c0c0"
+       	android:layout_marginRight="15dp"
+        android:layout_marginLeft="15dp" 
+        >
+	    <Spinner
+	        android:id="@+id/spinnerstate"        
+	        android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_marginTop="10dp"
+		    android:layout_marginBottom="10dp"
+	         />
+    </LinearLayout>
+    
     
     
     <TextView
@@ -61,21 +154,39 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/spinnerstate"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="15dp"
         android:layout_marginTop="20dp"
-        android:text="Selected Query: "
+        android:text="Select Reasoning Task: "
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@android:color/black" />
-    <Spinner
-        android:id="@+id/spinnerstate2"
+        android:textColor="@android:color/white" />
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp" />
+        android:background="#c0c0c0"
+       	android:layout_marginRight="15dp"
+        android:layout_marginLeft="15dp" 
+        >
+	    <Spinner
+	        android:id="@+id/spinnerstate2"        
+	        android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_marginTop="10dp"
+		    android:layout_marginBottom="10dp"
+		    android:popupBackground="#FFFFFF"
+	         />
+    </LinearLayout>
    <Button
         android:id="@+id/openpopup"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Open Popup Window" />
+        android:text="Inspect Results" 
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="20dp"/>
+   
+   
+   
+   
    
    
 </LinearLayout>
