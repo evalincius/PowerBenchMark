@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+<LinearLayout 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg"
@@ -22,7 +27,7 @@
         android:id="@+id/othertext"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Control Test"
+        android:text="CONTROL TEST"
         android:gravity="center"
         android:textColor="@android:color/white"
         android:textSize="20dp" />
@@ -36,13 +41,14 @@
 		            android:layout_width="fill_parent"
 		            android:layout_height="wrap_content"
 		            android:layout_weight="1"
-		            android:layout_marginTop="10dp"
+		            android:layout_marginRight="10dp"		            
+		    		android:background="#F5F6CE"
 		            android:text="Start Control Test" />
 		     <Button android:id="@+id/buttonStopControl"
 		            android:layout_width="fill_parent"
 		            android:layout_height="wrap_content"
 		            android:layout_weight="1"
-		            android:layout_marginTop="10dp"
+		    		android:background="#F5F6CE"		            
 		            android:text="Stop Control Test" />
  	 </LinearLayout>
     
@@ -56,7 +62,7 @@
         android:id="@+id/othertext2"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Select Reasoner or Simulation"
+        android:text="SELECT REASONER OR SIMULATION"
         android:gravity="center"
         android:textColor="@android:color/white"
         android:textSize="20dp" />
@@ -72,6 +78,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"		            
+		    android:background="#FFFFFF"
             android:text="Hermit" />
      
     	 <Button android:id="@+id/buttonAndroJena"
@@ -79,6 +87,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginTop="10dp"
+            android:background="#FFFFFF"
             android:text="AndroJena" />               
     </LinearLayout>
     
@@ -96,6 +105,8 @@
 		            android:layout_height="wrap_content"
 		            android:layout_weight="1"
 		            android:layout_marginTop="10dp"
+		            android:layout_marginRight="10dp"		            
+		            android:background="#FFFFFF"
 		            android:text="Pellet" />
 		     
 		     <Button android:id="@+id/buttonNull"
@@ -113,7 +124,14 @@
              android:layout_height="1dp"
              android:layout_marginTop="10dp"
              android:background="#FFFFFF"/>
-	
+	<TextView
+        android:id="@+id/othertext5"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="SELECT DATASET AND REASONING TASK"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:textSize="20dp" />
 	
      
     <TextView
@@ -123,8 +141,7 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/spinnerstate"
         android:layout_marginLeft="15dp"
-        android:layout_marginTop="20dp"
-        android:text="Select Size of LUBM Dataset "
+        android:text="Select size of LUBM ontology dataset:"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@android:color/white" />
   
@@ -143,6 +160,7 @@
 		    android:layout_height="wrap_content"
 		    android:layout_marginTop="10dp"
 		    android:layout_marginBottom="10dp"
+		   	android:popupBackground="#FFFFFF"
 	         />
     </LinearLayout>
     
@@ -155,8 +173,7 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/spinnerstate"
         android:layout_marginLeft="15dp"
-        android:layout_marginTop="20dp"
-        android:text="Select Reasoning Task: "
+        android:text="Select reasoning task: "
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@android:color/white" />
     <LinearLayout
@@ -175,18 +192,36 @@
 		    android:popupBackground="#FFFFFF"
 	         />
     </LinearLayout>
+    
+   <View
+             android:layout_width="fill_parent"
+             android:layout_height="1dp"
+             android:layout_marginTop="10dp"
+             android:background="#FFFFFF"/>
+	<TextView
+        android:id="@+id/othertext4"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="INSPECT RESULTS"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:textSize="20dp" />
+    
    <Button
         android:id="@+id/openpopup"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Inspect Results" 
+        android:text="Inspect results" 
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="20dp"/>
-   
+        android:background="#FFFFFF"
+        
+        />
    
    
    
    
    
 </LinearLayout>
+
+   </ScrollView>

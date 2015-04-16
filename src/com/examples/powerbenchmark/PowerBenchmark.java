@@ -53,7 +53,7 @@ public class PowerBenchmark extends ActionBarActivity {
 	private Timer timer;
 	private float draw;
 	private float drained;
-	private String SelectedOntology, SelectedQuery;
+	private String SelectedOntologyFile, SelectedOntologyName, SelectedQuery;
 	private int reasonerState;
 	
 	private BroadcastReceiver batteryInfoReceiver;
@@ -65,10 +65,10 @@ public class PowerBenchmark extends ActionBarActivity {
 	private static final String POWER_PROFILE_CLASS = "com.android.internal.os.PowerProfile";
 	
 	private String[] DatasetSize = { "1 Department","5 Departments","10 Departments","15 Departments" };
-	private String[] ReasoningTask = { "Instance Retrieval","Inference & Instance Retrieval","Inference","Classifying" };
+	private String[] ReasoningTask = { "Instance Retrieval","Inference & Instance Retrieval","Inference","Classification" };
 	
 	private String[] DatasetSizeToSend = { "University00.owl","University05.owl","University010.owl","University015.owl" };
-	private String[] ReasoningTaskToSend = { "Query1","Query2","Query3","Query4" };
+	//private String[] ReasoningTaskToSend = { "Query1","Query2","Query3","Query4" };
 
 
 
@@ -181,8 +181,7 @@ public class PowerBenchmark extends ActionBarActivity {
 	        	 
 	     	    
 	     	    spinnerState2.setSelection(position);
-		     	int pos = spinnerState2.getSelectedItemPosition();
-	     	    SelectedQuery = ReasoningTaskToSend[pos];
+	     	    SelectedQuery = spinnerState2.getSelectedItem().toString();
 	     	   
 	        }
 
@@ -201,7 +200,8 @@ public class PowerBenchmark extends ActionBarActivity {
 	        {
 	        	spinnerState.setSelection(position);
 	        	int pos = spinnerState.getSelectedItemPosition();
-	        	SelectedOntology = DatasetSizeToSend[pos];
+	        	SelectedOntologyName = spinnerState.getSelectedItem().toString();
+	        	SelectedOntologyFile = DatasetSizeToSend[pos];
 	        }
 
 	        @Override
@@ -223,7 +223,8 @@ public class PowerBenchmark extends ActionBarActivity {
 			public void onClick(View v) {
 				Intent intent = new Intent();
 				intent.setComponent(new ComponentName("com.example.hermitowlapi", "com.example.hermitowlapi.MainActivity"));
-		        intent.putExtra("ontologyName", SelectedOntology);
+		        intent.putExtra("ontologyName", SelectedOntologyName);
+				intent.putExtra("ontologyFile", SelectedOntologyFile);
 		        intent.putExtra("queryName", SelectedQuery);
 		        startActivityForResult(intent,90);
 
@@ -238,8 +239,9 @@ public class PowerBenchmark extends ActionBarActivity {
 				
 				Intent intent = new Intent();
 				intent.setComponent(new ComponentName("es.deusto.deustotech.adaptui", "es.deusto.deustotech.adaptui.ActivityExample"));
-		        intent.putExtra("ontologyName", SelectedOntology);
-		        intent.putExtra("queryName", SelectedQuery);
+				intent.putExtra("ontologyName", SelectedOntologyName);
+				intent.putExtra("ontologyFile", SelectedOntologyFile);
+				intent.putExtra("queryName", SelectedQuery);
 		        startActivityForResult(intent,90);
 			}
 		});
@@ -251,8 +253,9 @@ public class PowerBenchmark extends ActionBarActivity {
 			public void onClick(View v) {
 				Intent intent = new Intent();
 				intent.setComponent(new ComponentName("es.deusto.deustotech.androjena", "es.deusto.deustotech.androjena.MainActivity"));
-		        intent.putExtra("ontologyName", SelectedOntology);
-		        intent.putExtra("queryName", SelectedQuery);
+				intent.putExtra("ontologyName", SelectedOntologyName);
+				intent.putExtra("ontologyFile", SelectedOntologyFile);
+				intent.putExtra("queryName", SelectedQuery);
 		        startActivityForResult(intent,90);
 			}
 		});
@@ -338,8 +341,8 @@ public class PowerBenchmark extends ActionBarActivity {
 	        	    public void run() {
 	    				stopCountingTime = System.currentTimeMillis()-startCountingTime;	
 	    				float timeElapsed = (float) (stopCountingTime/1000.0);
-		        		((TextView)findViewById(R.id.textView)).setText("Capacity Drained = " + drained + "mAh \n"+ 
-		        			"Time elapsed : " +timeElapsed + "s\n"+"Voltage: "+curret+"mA"
+		        		((TextView)findViewById(R.id.textView)).setText("Capacity drained = " + drained + "mAh \n"+ 
+		        			"Time elapsed : " +timeElapsed + "s\n"+"Power consumed: "+watts+"W"
 		        					);
 	        	            }
 	        	    });	        	
