@@ -11,11 +11,15 @@ import java.util.Stack;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ShapeDrawable;
 import android.os.BatteryManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -25,7 +29,9 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -36,6 +42,7 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.graphics.drawable.ColorDrawable;
 
 public class PowerBenchmark extends ActionBarActivity {
 	private TextView textView;
@@ -59,7 +66,8 @@ public class PowerBenchmark extends ActionBarActivity {
 	private BroadcastReceiver batteryInfoReceiver;
 	private int mvoltage;
 	private float watts;
-
+	private PopupWindow popupWindow = null;
+	private boolean popupOpened = false;
 
 	static final int PICK_CONTACT_REQUEST = 1;  // The request code
 	private static final String POWER_PROFILE_CLASS = "com.android.internal.os.PowerProfile";
@@ -98,60 +106,73 @@ public class PowerBenchmark extends ActionBarActivity {
         btnOpenPopup.setOnClickListener(new Button.OnClickListener(){
         	
         	
-        	//creates popup window
-   @Override
-   public void onClick(View arg0) {
-    LayoutInflater layoutInflater 
-     = (LayoutInflater)getBaseContext()
-      .getSystemService(LAYOUT_INFLATER_SERVICE);  
-    View popupView = layoutInflater.inflate(R.layout.popup, null);  
-             final PopupWindow popupWindow = new PopupWindow(
-               popupView, 
-               LayoutParams.WRAP_CONTENT,  
-                     LayoutParams.WRAP_CONTENT);  
-             popupWindow.showAtLocation(textView, Gravity.CENTER, 0, 0);
-             TextView popuptext = (TextView)popupView.findViewById(R.id.popuptext);
-             try {
-            	//write("log", "The Log file is currently empty");
-				popuptext.setText(read("log"));
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-             Button btnDismiss = (Button)popupView.findViewById(R.id.dismiss);
-             Button btnClean = (Button)popupView.findViewById(R.id.clean);
+			    //creates popup window
+			   @Override
+			   public void onClick(View arg0) {
+				   if(!popupOpened){
+				   popupOpened =true;
+				   LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);  
+				   View popupView = layoutInflater.inflate(R.layout.popup, null);  
+			       popupWindow = new PopupWindow(popupView, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);  
+			             popupWindow.showAtLocation(textView, Gravity.CENTER, 0, 0);
+			             TextView popuptext = (TextView)popupView.findViewById(R.id.popuptext);
+			             popupWindow.setBackgroundDrawable(new ShapeDrawable());
+			             
+			             try {
+			            	//write("log", "The Log file is currently empty");
+							popuptext.setText(read("log"));
+			             } catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+			             }
+			             Button btnDismiss = (Button)popupView.findViewById(R.id.dismiss);
+			             Button btnClean = (Button)popupView.findViewById(R.id.clean);
+			
+			             btnDismiss.setOnClickListener(new Button.OnClickListener(){
+			
+						     @Override
+						     public void onClick(View v) {
+						      // TODO Auto-generated method stub
+							  popupOpened =false;
+						      popupWindow.dismiss();
+						     }});
+			             
+			             
+			             btnClean.setOnClickListener(new Button.OnClickListener(){
+			
+						     @Override
+						     public void onClick(View v) {
+						      // TODO Auto-generated method stub
+						     	write("log", "This is a Log File");
+						     	write("justdata", "This is a Log File");
+								write("ontLoader", "This is a Log File");
+					    		write("Results", "This is a Log File");
+					    		write("ReasonerTime", "This is a Log File");
+					    		write("LoaderTime", "This is a Log File");
+					    		write("PowerReasoner", "This is a Log File");
+					    		write("PowerLoader", "This is a Log File");
+							    popupOpened =false;
+						        popupWindow.dismiss();
 
-             btnDismiss.setOnClickListener(new Button.OnClickListener(){
-
-			     @Override
-			     public void onClick(View v) {
-			      // TODO Auto-generated method stub
-			      popupWindow.dismiss();
-			     }});
-             
-             
-             btnClean.setOnClickListener(new Button.OnClickListener(){
-
-			     @Override
-			     public void onClick(View v) {
-			      // TODO Auto-generated method stub
-			     	write("log", "This is a Log File");
-			     	write("justdata", "This is a Log File");
-					write("ontLoader", "This is a Log File");
-		    		write("Results", "This is a Log File");
-		    		write("ReasonerTime", "This is a Log File");
-		    		write("LoaderTime", "This is a Log File");
-		    		write("PowerReasoner", "This is a Log File");
-		    		write("PowerLoader", "This is a Log File");
-			        popupWindow.dismiss();
-			     }});
-               
-          
-             
-			               
-			             popupWindow.showAsDropDown(btnOpenPopup, 50, -30);
-			         
-			   }});	
+						     }});
+			               		             
+						             popupWindow.showAsDropDown(btnOpenPopup, 50, -30);
+						         
+						             popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+			
+						            	    @Override
+						            	    public void onDismiss() {
+											    popupOpened =false;
+						            	    	popupWindow.dismiss();
+						            	    	
+						            	        // end may TODO anything else                   
+						            	    }
+						            	});
+						             
+						             
+						   }
+			   }
+   });	
 		
 		//Creates DropDown menu 
 
@@ -263,6 +284,7 @@ public class PowerBenchmark extends ActionBarActivity {
 		buttonNull.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				reasonerState=1;
 				Simulate(createPermutation());
 			}
 		});	
@@ -413,7 +435,8 @@ public class PowerBenchmark extends ActionBarActivity {
 	   }
 	
 	//File reader
-	   public String read(String fname){
+	   @SuppressWarnings("resource")
+	public String read(String fname){
 	     BufferedReader br = null;
 	     String response = null;
 	      try {
@@ -467,7 +490,7 @@ public class PowerBenchmark extends ActionBarActivity {
 		    final Stack<String> stack = s;
 		   
 		   
-		   if(!stack.isEmpty()){
+		   if(!stack.isEmpty()&&reasonerState!=-1){
 			   if(reasonerState==1){
 				   String a = stack.pop();
 				   if(a.equals("androjena")){
@@ -522,5 +545,56 @@ public class PowerBenchmark extends ActionBarActivity {
 		};
 		registerReceiver(this.batteryInfoReceiver,	new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
 	}
+   /**
+    * Method created the pop up dialog asking if user
+    * wants really quite and application.
+    */
+   @Override
+   public void onBackPressed() {
+	   if(popupWindow!=null){
+   	  	
+		   if(popupWindow.isShowing()){
+			   popupOpened =false;
+			   popupWindow.dismiss();	 
+		   }else{
+			   callExitDialog(); 
+		   }
+	   }else{
+		   callExitDialog();
+	   }
+	}
+   public void callExitDialog(){
+ 		final Dialog dialog = new Dialog(this);
+		dialog.setContentView(R.layout.customexit);			
+		dialog.setTitle("PowerBenchMark");
+		// set the custom dialog components - text, image and button
+		TextView text = (TextView) dialog.findViewById(R.id.text);
+		text.setText("Are you sure you want");
+		TextView text2 = (TextView) dialog.findViewById(R.id.text2);
+		text2.setText("to EXIT?");
+		ImageView image = (ImageView) dialog.findViewById(R.id.image);
+		image.setImageResource(R.drawable.exit); 
+		Button dialogButton = (Button) dialog.findViewById(R.id.btnok);
+		Button dialogButton2 = (Button) dialog.findViewById(R.id.btncancel);
+		// if button is clicked, close the custom dialog
+		dialogButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				finish();
+        		dialog.dismiss();             		
+			}
+		});
+		
+		dialogButton2.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				dialog.dismiss();
+				
+			}
+		});
 
+		dialog.show();
+	   
+   }
+   
 }
