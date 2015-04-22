@@ -42,7 +42,11 @@ import android.widget.TextView;
  * one main window. Moreover, this class implements the feature of selecting the dataset size
  * and the resoning task from the dropDown menu. 
  * It also has control test implemented which measures the power consumption.
- */ 
+ * 
+ * @author  Edgaras Valincius
+ * @version 1.0
+ * @since   2015-02-19 
+ */
 public class PowerBenchmark extends ActionBarActivity {
 	private TextView textView;
 	private Button buttonHermit;
@@ -389,8 +393,8 @@ public class PowerBenchmark extends ActionBarActivity {
 	/**
 	* File Writer method writes the desired content into the file.
 	* If there is no such a file, generates it.
-	* @param String fname is a name for a file.
-	* @param String fcontent is a content for a file. 
+	* @param  fname is a name for a file.
+	* @param  fcontent is a content for a file. 
 	*/
 	public void write(String fname, String fcontent){
         String filename= "storage/emulated/0/Download/"+fname+".txt";
@@ -401,14 +405,9 @@ public class PowerBenchmark extends ActionBarActivity {
         }
         BufferedWriter writer = null;
         try {
-            //create a temporary file
             File logFile = new File(filename);
-
-            // This will output the full path where the file will be written to...
             System.out.println(logFile.getCanonicalPath());
-
-            writer = new BufferedWriter(new FileWriter(logFile));
-            
+            writer = new BufferedWriter(new FileWriter(logFile));            
             writer.write(temp + fcontent );
         } catch (Exception e) {
             e.printStackTrace();
@@ -422,9 +421,9 @@ public class PowerBenchmark extends ActionBarActivity {
 	}
 	
 	/**
-	* File Writer method reads the content from the file.
-	* @param String fname is a name for a file.
-	* @return String response is a content that is read from the file.
+	* File Reader method reads the content from the file.
+	* @param  fname is a name for a file.
+	* @return  response is a content that is read from the file.
 	*/
 	@SuppressWarnings("resource")
 	public String read(String fname){
